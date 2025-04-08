@@ -23,13 +23,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${lexend.variable} antialiased`}
-      >
+      <body className={`${lexend.variable} antialiased scroll-smooth`}>
         <ThemeProvider>
-          <div className="min-h-screen bg-background text-foreground">
-            <MouseMoveEffect />
-            {children}
+          <div className="min-h-screen">
+            {/* Darker fixed gradient layer */}
+            <div className="fixed inset-0 -z-10 light-mode-gradient dark:hidden opacity-100" />
+            
+            {/* Semi-transparent content layer */}
+            <div className="relative bg-white/80 dark:bg-background text-foreground">
+              <MouseMoveEffect />
+              {children}
+            </div>
           </div>
         </ThemeProvider>
       </body>

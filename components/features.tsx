@@ -16,7 +16,7 @@ export default function Features() {
           >
             <div className="flex flex-col items-center gap-4 w-full">
               <motion.h2
-                className="text-5xl leading-tight text-center font-normal"
+                className="text-3xl sm:text-4xl md:text-5xl leading-tight text-center font-normal"
                 initial={{ opacity: 0, y: -20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
@@ -25,7 +25,7 @@ export default function Features() {
                 About Us
               </motion.h2>
               <motion.div
-                className="text-lg leading-relaxed text-subtext-color px-4 sm:px-0 font-normal"
+                className="text-base sm:text-lg md:text-xl leading-relaxed text-subtext-color px-4 sm:px-0 font-normal"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}

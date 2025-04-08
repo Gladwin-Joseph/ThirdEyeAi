@@ -1,11 +1,21 @@
 'use client';
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/components/theme-provider";
 
 export default function Navbar() {
   const { theme } = useTheme();
+
+  const handleSmoothScroll = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,12 +40,18 @@ export default function Navbar() {
           )}
         </Link>
         <nav className="flex flex-1 items-center justify-end space-x-6 text-sm font-medium">
-          <Link href="#about" className="transition-colors hover:text-primary">
+          <button
+            onClick={() => handleSmoothScroll("about")}
+            className="transition-colors hover:text-primary"
+          >
             About
-          </Link>
-          <Link href="#contact" className="transition-colors hover:text-primary">
+          </button>
+          <button
+            onClick={() => handleSmoothScroll("contact")}
+            className="transition-colors hover:text-primary"
+          >
             Contact
-          </Link>
+          </button>
           <ThemeToggle />
         </nav>
       </div>
