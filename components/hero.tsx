@@ -135,14 +135,14 @@ export default function Hero() {
       />
       {/* Logo reveal */}
       <motion.div
-        className="fixed inset-0 flex items-center justify-center pointer-events-none z-30"
-        style={{
-          opacity: logoOpacity,
-          scale: logoScale,
-          y: logoY,
-          willChange: "transform, opacity"
-        }}
-      >
+  className="fixed inset-0 flex items-center justify-center pointer-events-none z-30"
+  style={{
+    opacity: logoOpacity,
+    scale: logoScale,
+    y: logoY,
+    willChange: "transform, opacity"
+  }}
+>
         <div className="w-64 h-64 md:w-80 md:h-80 relative flex flex-col items-center justify-center">
           {/* Text part */}
           <AnimatePresence>
@@ -210,7 +210,6 @@ export default function Hero() {
                 className="absolute inset-0"
               >
                 <svg viewBox="0 0 1080 1080" className="w-full h-full">
-                  {/* Changed the dots from white (#ffffff) to blue (#1E90FF) */}
                   <circle cx="540" cy="332.19" r="76.18" fill="#0056D6" />
                   <circle cx="443.4" cy="502.52" r="76.18" fill="#0056D6" />
                   <circle cx="636.6" cy="502.52" r="76.18" fill="#0056D6" />
@@ -226,13 +225,23 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="absolute bottom-[-60px] w-full text-center"
+                className="absolute bottom-[-60px] w-full text-center space-y-1"
               >
-              <p className={`text-xl mb-20 font-normal ${
+              <p className={`text-xl font-normal ${
                   theme === 'dark' ? 'text-white' : 'text-black'
                 }`}>
                   for the game!
                 </p>
+                <motion.p 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className={`text-lg ${
+              theme === 'dark' ? 'text-white' : 'text-black/80'
+            }`}
+          >
+            Sauf peut-être avec...
+          </motion.p>
               </motion.div>
             )}
           </AnimatePresence>
