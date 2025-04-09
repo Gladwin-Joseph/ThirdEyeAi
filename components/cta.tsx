@@ -160,7 +160,7 @@ export default function ContactForm() {
                 placeholder={
                   field === "from_name" ? "Your name" :
                   field === "reply_to" ? "Your email" :
-                  "Subject or purpose"
+                  "Subject"
                 }
                 required
                 className={`text-sm px-3 py-2 sm:text-base sm:px-4 sm:py-2.5 ${
@@ -232,7 +232,7 @@ export default function ContactForm() {
                   Message Sent
                 </h3>
                 <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} text-sm sm:text-base mb-6`}>
-                  We'll get back to you soon
+                  We'll get back to you soon.
                 </p>
                 <Button onClick={closeDialog} className={`${theme === 'dark' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}>
                   Close

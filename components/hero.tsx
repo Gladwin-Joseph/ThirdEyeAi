@@ -227,21 +227,11 @@ export default function Hero() {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="absolute bottom-[-60px] w-full text-center space-y-1"
               >
-              <p className={`text-xl font-normal ${
+              <p className={`text-xl font-normal mb-20 ${
                   theme === 'dark' ? 'text-white' : 'text-black'
                 }`}>
                   for the game!
                 </p>
-                <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className={`text-lg ${
-              theme === 'dark' ? 'text-white' : 'text-black/80'
-            }`}
-          >
-            Sauf peut-être avec...
-          </motion.p>
               </motion.div>
             )}
           </AnimatePresence>

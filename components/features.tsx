@@ -22,7 +22,7 @@ export default function Features() {
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
                 viewport={{ once: true, amount: 0.3 }}
               >
-                About Us
+                About
               </motion.h2>
               <motion.div
                 className="text-base sm:text-lg md:text-xl leading-relaxed text-subtext-color px-4 sm:px-0 font-normal"

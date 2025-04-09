@@ -3,6 +3,7 @@ import Hero from "@/components/hero"
 import Features from "@/components/features"
 import CTA from "@/components/cta"
 import Footer from "@/components/footer"
+import ComingSoon from "@/components/comingsoon"
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <Navbar />
         <Hero />
         <Features />
+        <ComingSoon />
         <CTA />
         <Footer />
       </div>
