@@ -13,7 +13,37 @@ const lexend = Lexend({
 export const metadata: Metadata = {
   title: "ThirdEyeAi",
   description: "ThirdEyeAi",
-  generator: "gladwin"
+  generator: "gladwin",
+
+  icons: {
+    // Modern browsers 
+    icon: [
+      { url: "/icon.png", sizes: "512x512", type: "image/png" }, // Primary
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" }, // Android PWA
+    ],
+    
+    // Legacy .ico 
+    shortcut: "/favicon.ico",
+    
+    // Apple devices 
+    apple: "/apple-touch-icon.png",
+    
+    // Explicit sizes for precise control
+    other: [
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "32x32",
+        url: "/favicon-32x32.png" 
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "16x16",
+        url: "/favicon-16x16.png" 
+      }
+    ]
+  }
 };
 
 export default function RootLayout({

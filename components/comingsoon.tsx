@@ -6,7 +6,7 @@ export default function ComingSoon() {
   const { theme } = useTheme();
 
   return (
-    <section className={`border-t ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <section className={`border-t ${theme === 'dark' ? 'bg-gray-950' : 'bg-gray-50'}`}>
       <div className="flex w-full flex-col items-center justify-center gap-24 px-6 py-32">
         <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-12">
           <motion.div

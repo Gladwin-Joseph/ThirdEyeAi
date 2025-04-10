@@ -4,14 +4,23 @@ import {
   motion,
   useScroll,
   useTransform,
-  AnimatePresence
+  AnimatePresence,
+  useInView
 } from "framer-motion";
 import { useTheme } from "@/components/theme-provider";
 
 export default function Hero() {
   const { theme } = useTheme();
-  const fullText = "Ce qui est important, ça ne se voit pas...";
-  const [displayedText, setDisplayedText] = useState("");
+
+  const firstLine = "Ce qui est important,";
+  const secondLine = "ça ne se voit pas ...";
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, { once: true, margin: "-20%" });
+
+  const [displayedFirstLine, setDisplayedFirstLine] = useState("");
+  const [displayedSecondLine, setDisplayedSecondLine] = useState("");
+  
+
   const sectionRef = useRef<HTMLDivElement>(null);
   const [logoStage, setLogoStage] = useState(0);
 
@@ -20,50 +29,56 @@ export default function Hero() {
     offset: ["start start", "end start"]
   });
 
-  // Theme-dependent overlay settings
-  const overlayOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.4, 0.65],
-    [0, theme === 'dark' ? 0.6 : 0.4, 0]
-  );
-
-  const blurValue = useTransform(
-    scrollYProgress,
-    [0, 0.4, 0.65],
-    ["blur(0px)", "blur(10px)", "blur(0px)"]
-  );
-  const textOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
+  const firstTextOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const secondTextOpacity = useTransform(scrollYProgress, [0.1, 0.3, 0.45], [0, 1, 0]);
   const logoOpacity = useTransform(
     scrollYProgress,
-    [0.25, 0.3, 0.7, 0.85],
-    [0, 1, 1, 0]
+    [0.45, 0.6, 0.95],  
+    [0, 1, 0]         
   );
-  const logoScale = useTransform(scrollYProgress, [0.3, 0.7], [1, 1]);
-  const logoY = useTransform(scrollYProgress, [0.3, 0.7, 0.85], [0, 0, -30]);
-
+  const logoFadeDuration = 0.5;
+  const overlayOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.6],
+    [0, theme === 'dark' ? 0.6 : 0.4, 0]
+  );
+  const logoScale = useTransform(
+    scrollYProgress,
+    [0.6, 0.7, 0.85],  // Adjusted timing to match longer visibility
+    [1, 1.05, 1.05]    // Smooth scale animation
+  );
+  
+  const logoY = useTransform(
+    scrollYProgress, 
+    [0.6, 0.85, 0.9],  // Adjusted timing
+    [0, -40, -50]      // Smoother upward movement
+  );
+  
+  
   useEffect(() => {
     let i = 0;
-    let startTime: number | null = null;
-
-    function typeEffect(timestamp: number) {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-      const speed = 35;
-
-      if (elapsed > i * speed) {
-        if (i < fullText.length) {
-          setDisplayedText(fullText.slice(0, i + 1));
-          i++;
-          requestAnimationFrame(typeEffect);
-        }
+    const interval1 = setInterval(() => {
+      if (i < firstLine.length) {
+        setDisplayedFirstLine(firstLine.slice(0, i + 1));
+        i++;
       } else {
-        requestAnimationFrame(typeEffect);
+        clearInterval(interval1);
+        let j = 0;
+        const interval2 = setInterval(() => {
+          if (j < secondLine.length) {
+            setDisplayedSecondLine(secondLine.slice(0, j + 1));
+            j++;
+          } else {
+            clearInterval(interval2);
+          }
+        }, 50);
       }
-    }
+    }, 50);
 
-    requestAnimationFrame(typeEffect);
+    return () => clearInterval(interval1);
+  }, []);
 
-    // Start logo animation sequence when logo becomes visible
+  useEffect(() => {
     const unsubscribe = logoOpacity.on("change", (value) => {
       if (value > 0.5 && logoStage === 0) {
         setLogoStage(1);
@@ -75,87 +90,93 @@ export default function Hero() {
     return () => unsubscribe();
   }, [logoOpacity, logoStage]);
 
-  // Split the displayed text at the comma
-  const [firstPart, secondPart] = displayedText.split(",");
-
   return (
-    <div ref={sectionRef} className="relative min-h-[250vh]">
-      {/* Hero section */}
+    <div ref={sectionRef} className="relative min-h-[550vh]">
+      {/* First Quote */}
       <motion.section
-        style={{ filter: blurValue, opacity: textOpacity }}
+        style={{ opacity: firstTextOpacity }}
         className="sticky top-0 z-10 container flex min-h-screen max-w-screen-2xl flex-col items-center justify-center space-y-8 py-24 text-center md:py-32"
       >
-        <div className="space-y-4 mb-24">
-          <h1 className="bg-gradient-to-br from-foreground from-30% via-foreground/90 to-foreground/70 bg-clip-text text-4xl tracking-tight text-transparent sm:text-4xl md:text-5xl lg:text-6xl font-normal">
-            {firstPart}
-            {displayedText.includes(",") && (
-              <>
-                ,<br />
-                {secondPart}
-              </>
-            )}
-            {!displayedText.includes(",") && displayedText.length > 0 && "..."}
-          </h1>
-        </div>
+        <h1 className="bg-gradient-to-br from-foreground from-30% via-foreground/90 to-foreground/70 bg-clip-text text-4xl tracking-tight text-transparent sm:text-4xl md:text-5xl lg:text-6xl font-normal mb-20">
+          {displayedFirstLine}
+          {displayedFirstLine.length === firstLine.length && <br />}
+          {displayedSecondLine}
+        </h1>
 
-        {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-12 flex flex-col items-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}
-        >
-          <div className="relative w-6 h-10 border-2 border-foreground rounded-full flex justify-center overflow-hidden mb-14">
-            <motion.div
-              className="absolute w-1.5 h-1.5 bg-foreground rounded-full"
-              animate={{
-                y: [4, 14, 4]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                times: [0, 0.5, 1]
-              }}
-            />
-          </div>
-        </motion.div>
+  className="absolute bottom-12 flex flex-col items-center"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 1, duration: 0.8 }}
+  style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}
+>
+  <div className="relative w-6 h-10 border-2 border-foreground rounded-full flex justify-center overflow-hidden mb-14">
+    <motion.div
+      className="absolute w-1.5 h-1.5 bg-foreground rounded-full"
+      animate={{ y: [4, 14, 4] }}
+      transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut",
+        times: [0, 0.5, 1]
+      }}
+    />
+  </div>
+</motion.div>
       </motion.section>
 
-      {/* Dark overlay */}
+      {/* Second Quote */}
+      <motion.section
+  ref={svgRef}
+  style={{ opacity: secondTextOpacity }}
+  className="sticky top-0 z-20 container flex min-h-screen max-w-screen-2xl flex-col items-center justify-center py-24 text-center md:py-32"
+>
+  <AnimatePresence>
+    {isInView && (
+      <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0 }}
+        transition={{
+          duration: 1.2,
+          ease: "easeOut",
+        }}
+        className="text-4xl sm:text-5xl md:text-6xl font-normal text-black dark:text-white"
+      >
+        Sauf peut-être avec...
+      </motion.h1>
+    )}
+  </AnimatePresence>
+</motion.section>
+
+      {/* Overlay */}
       <motion.div
-        className={`fixed inset-0 pointer-events-none z-20 ${
+        className={`fixed inset-0 pointer-events-none z-15 ${
           theme === 'dark' ? 'bg-black' : 'bg-white/50'
         }`}
-        style={{
-          opacity: overlayOpacity,
-          willChange: "opacity"
-        }}
+        style={{ opacity: overlayOpacity }}
       />
-      {/* Logo reveal */}
+
+      {/* Logo Reveal */}
       <motion.div
-  className="fixed inset-0 flex items-center justify-center pointer-events-none z-30"
-  style={{
-    opacity: logoOpacity,
-    scale: logoScale,
-    y: logoY,
-    willChange: "transform, opacity"
-  }}
->
+        className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none"
+        style={{
+          opacity: logoOpacity,
+          scale: logoScale,
+          y: logoY,
+          transition: {
+            opacity: {duration: logoFadeDuration,ease:"easeOut"}
+          },
+          willChange: "transform, opacity"
+        }}
+      >
         <div className="w-64 h-64 md:w-80 md:h-80 relative flex flex-col items-center justify-center">
-          {/* Text part */}
+          {/* Logo animation parts */}
           <AnimatePresence>
             {logoStage >= 1 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="w-full"
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full">
                 <svg viewBox="0 0 1080 1080" className="w-full">
-                  {/* Only show the text paths */}
-                  <path
+                <path
                     d="M170,719.35v-11.08h50.01v11.08h-50.01ZM188.16,788.6v-101.41h11.54v101.41h-11.54Z"
                     fill= {theme === 'dark' ? "#ffffff" : "#000000"}
                   />
@@ -200,15 +221,9 @@ export default function Hero() {
             )}
           </AnimatePresence>
 
-          {/* Dots part */}
           <AnimatePresence>
             {logoStage >= 2 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="absolute inset-0"
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0">
                 <svg viewBox="0 0 1080 1080" className="w-full h-full">
                   <circle cx="540" cy="332.19" r="76.18" fill="#0056D6" />
                   <circle cx="443.4" cy="502.52" r="76.18" fill="#0056D6" />
@@ -218,16 +233,14 @@ export default function Hero() {
             )}
           </AnimatePresence>
 
-          {/* Slogan text */}
           <AnimatePresence>
             {logoStage >= 3 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="absolute bottom-[-60px] w-full text-center space-y-1"
+                className="absolute bottom-[-60px] w-full text-center"
               >
-              <p className={`text-xl font-normal mb-20 ${
+                <p className={`text-xl font-normal mb-20 ${
                   theme === 'dark' ? 'text-white' : 'text-black'
                 }`}>
                   for the game!
